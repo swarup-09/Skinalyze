@@ -1,17 +1,10 @@
 import { useAuth } from "@/lib/auth-context";
-import { useState } from "react";
-import { Image } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Text,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function AuthScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -20,6 +13,8 @@ export default function AuthScreen() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { signIn, signUp, resetPasswordRequest } = useAuth();
   const router = useRouter();
@@ -34,7 +29,7 @@ export default function AuthScreen() {
         setError("Passwords do not match");
         return;
       }
-      const err = await signUp(email, password, name);
+      const err = await signUp(name, email, password);
       if (err) {
         setError(err);
         return;
@@ -63,11 +58,11 @@ export default function AuthScreen() {
   };
 
   return (
-     <KeyboardAwareScrollView
-    contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
-    enableOnAndroid={true}
-    extraScrollHeight={20}
-  >
+    <KeyboardAwareScrollView
+      contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+      enableOnAndroid={true}
+      extraScrollHeight={20}
+    >
       {/* Top Gradient */}
       <LinearGradient
         colors={["#ff6f61", "#9c27b0"]}
@@ -115,11 +110,18 @@ export default function AuthScreen() {
           <MaterialIcons name="lock" size={20} color="#999" style={styles.icon} />
           <TextInput
             placeholder="Password"
-            secureTextEntry
             style={styles.input}
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={!showPassword}
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <MaterialIcons
+              name={showPassword ? "visibility" : "visibility-off"}
+              size={20}
+              color="#999"
+            />
+          </TouchableOpacity>
         </View>
 
         {/* Confirm Password - Only for Sign Up */}
@@ -128,13 +130,21 @@ export default function AuthScreen() {
             <MaterialIcons name="lock-outline" size={20} color="#999" style={styles.icon} />
             <TextInput
               placeholder="Confirm Password"
-              secureTextEntry
               style={styles.input}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
+              secureTextEntry={!showConfirmPassword}
             />
+            <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
+              <MaterialIcons
+                name={showConfirmPassword ? "visibility" : "visibility-off"}
+                size={20}
+                color="#999"
+              />
+            </TouchableOpacity>
           </View>
         )}
+
 
         {/* Error message */}
         {error && <Text style={styles.errorText}>{error}</Text>}
@@ -164,7 +174,7 @@ export default function AuthScreen() {
           <Text style={styles.switchText}>
             {isSignUp
               ? "Already have an account? Sign in"
-              : "Don’t have an account? Create"}
+              : "Don't have an account? Create"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -197,13 +207,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-  width: 100,
-  height: 100,
-  alignSelf: "center",
-  marginBottom: 20,
-  borderRadius: 20,
-  resizeMode: "contain",
-},
+    width: 100,
+    height: 100,
+    alignSelf: "center",
+    marginBottom: 20,
+    borderRadius: 20,
+    resizeMode: "contain",
+  },
 
   subtitle: {
     fontSize: 16,
@@ -214,15 +224,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",  
+    backgroundColor: "#fff",
     borderRadius: 12,
     paddingHorizontal: 10,
     marginBottom: 16,
     shadowColor: "#000",
-    shadowOpacity: 0.1,    
+    shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
-    elevation: 3,         
+    elevation: 3,
   },
   input: { flex: 1, padding: 10 },
   icon: { marginRight: 8 },

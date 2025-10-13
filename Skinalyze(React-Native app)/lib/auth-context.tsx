@@ -12,6 +12,8 @@ type UserData = {
   userId: string;
 };
 
+type UserDocument = Models.Document & UserData;
+
 type AuthContextType = {
   user: Models.User<Models.Preferences> | null;
   userData: UserData | null;
@@ -38,15 +40,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && !userData) {
       fetchUserData();
     }
-  }, [user]);
+
+    // NOTE: If you decide to remove this useEffect entirely and manage fetchUserData
+    // manually inside `signIn` and `getUser`, it would be even cleaner!
+    // For now, we keep it as a fallback for initial load/sign-in.
+  }, [user, userData]);
 
   const getUser = async () => {
     try {
       const session = await account.get();
-      setUser(session);
+      setUser(session); 
     } catch (error) {
       setUser(null);
     } finally {
@@ -56,50 +62,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (name: string, email: string, password: string) => {
     try {
-      // 1️⃣ Create user account
-      const user = await account.create(ID.unique(), email, password, name);
-      console.log("User created successfully:", user.$id);
+      const newUser = await account.create(ID.unique(), email, password, name);
+      console.log("User created successfully:", newUser.$id);
 
-      // 2️⃣ Sign in the user to create session
-      const signInError = await signIn(email, password);
-      if (signInError) {
-        throw new Error(signInError);
-      }
+      //Sign in the user to create session (This sets the global user state via signIn)
+      await account.createEmailPasswordSession(email, password);
 
-      // 3️⃣ Fetch logged-in user to ensure session is valid
+      // Fetch logged-in user to ensure session is valid and get the latest user object
       const sessionUser = await account.get();
       console.log("Session user:", sessionUser.$id);
 
-      // 4️⃣ Send verification email
-      await account.createVerification({
-        url: 'https://swarup-09.github.io/accounts.skinalyze/'
-      });
+      // Store additional user info in database
+      // CRITICAL step to ensure the document exists before the UI tries to read it.
+      const initialUserData = {
+        userId: sessionUser.$id,
+        fullName: sessionUser.name || name,
+        dob: "",
+        gender: "Not Specified",
+        phone: "",
+        altphone: "",
+      };
 
-      // 5️⃣ Store additional user info in database
       try {
-        const userDoc = await databases.createDocument(
+        const userDoc: UserDocument = await databases.createDocument(
           DATABASE_ID,
           USERS_COLLECTION_ID,
           sessionUser.$id, // Use user ID as document ID
-          {
-            userId: sessionUser.$id,
-            fullName: sessionUser.name || name,
-            dob: "",
-            gender: "Not Specified",
-            phone: "",
-            altphone: "",
-          },
+          initialUserData,
           [
             Permission.read(Role.user(sessionUser.$id)),
             Permission.write(Role.user(sessionUser.$id)),
             Permission.delete(Role.user(sessionUser.$id)),
           ]
         );
-        console.log("User data stored in database:", JSON.stringify(userDoc));
+        console.log("User data stored in database:", userDoc.$id);
+
+        setUser(sessionUser);
+        setUserData({
+          fullName: userDoc.fullName,
+          dob: userDoc.dob,
+          gender: userDoc.gender,
+          phone: userDoc.phone,
+          altphone: userDoc.altphone,
+          userId: userDoc.userId,
+        });
+
       } catch (dbError) {
-        console.error("Database error:", dbError);
-        // Don't throw here - user account is created, just DB storage failed
+        console.error("Database error during document creation:", dbError);
+        setUser(sessionUser);
+        setUserData(initialUserData); // Set defaults to avoid a blank screen
       }
+      //verification email
+      await account.createVerification({
+        url: 'https://swarup-09.github.io/accounts.skinalyze/'
+      });
 
       Alert.alert(
         "Verify your email",
@@ -119,8 +135,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       await account.createEmailPasswordSession(email, password);
-      const session = await account.get();
-      setUser(session);
+
+      const sessionUser = await account.get();
+
+      // Update state
+      setUser(sessionUser);
+
+      // an existing user, need to explicitly fetch data immediately for faster UX.
+      await fetchUserData(sessionUser.$id);
+
       return null;
     } catch (error) {
       if (error instanceof Error) {
@@ -154,14 +177,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const fetchUserData = async () => {
-    if (!user) return;
+  // Allow passing an optional userId for immediate fetch (used in signIn)
+  const fetchUserData = async (userId: string | undefined = user?.$id) => {
+    if (!userId) return;
     setIsLoadingUserData(true);
     try {
-      const document = await databases.getDocument(
+      const document: UserDocument = await databases.getDocument(
         DATABASE_ID,
         USERS_COLLECTION_ID,
-        user.$id
+        userId
       );
       setUserData({
         fullName: document.fullName || "",
@@ -169,18 +193,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         gender: document.gender || "",
         phone: document.phone || "",
         altphone: document.altphone || "",
-        userId: document.userId || user.$id,
+        userId: document.userId || userId,
       });
     } catch (error) {
       console.error("Error fetching user data:", error);
-      // Set default values if document doesn't exist
+      // Fallback to user data from account if document is truly not found
       setUserData({
-        fullName: user.name || "",
+        fullName: user?.name || "",
         dob: "",
         gender: "",
         phone: "",
         altphone: "",
-        userId: user.$id,
+        userId: userId,
       });
     } finally {
       setIsLoadingUserData(false);
@@ -196,6 +220,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user.$id,
         data
       );
+      // Ensure userData is updated with the new, confirmed data
       setUserData(prev => prev ? { ...prev, ...data } : null);
       console.log("User data updated:", updatedDoc);
       return null;

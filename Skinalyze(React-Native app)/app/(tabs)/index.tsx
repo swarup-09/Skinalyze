@@ -6,15 +6,15 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Image,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  ActivityIndicator,
-  SafeAreaView,
   Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 // Reusable button components for better code organization
@@ -39,6 +39,8 @@ const SecondaryButton = ({ onPress, text, icon, disabled }: any) => (
     <Text style={styles.secondaryButtonText}>{text}</Text>
   </TouchableOpacity>
 );
+
+const API_BASE_URL = 'http://10.98.231.46:8000'; 
 
 export default function Index() {
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -70,7 +72,7 @@ export default function Index() {
     formData.append('image', { uri: imageUri, name: filename, type } as any);
 
     try {
-      const res = await fetch('http://10.195.162.46:5000/predict', {
+      const res = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         body: formData,
         headers: { 'content-type': 'multipart/form-data' },
