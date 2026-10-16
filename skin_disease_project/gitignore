@@ -1,0 +1,38 @@
+# Python
+# Virtual environment
+/venv/
+.venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyd
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+eggs/
+*.egg-info/
+
+# Jupyter Notebook files
+.ipynb_checkpoints
+
+# IDE / Editor files
+.vscode/ # Visual Studio Code settings
+.idea/ # PyCharm/IntelliJ idea settings
+*.sublime-project
+*.sublime-workspace
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Project-specific exclusions from your image:
+# Any output files from your training or prediction scripts
+/models/
+
+# Datasets (often large and shouldn't be tracked)
+/dataset_split/
+Skin Cancer Dataset/

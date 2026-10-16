@@ -1,0 +1,8 @@
+
+venv/
+.venv/
+__pycache__/
+node_modules/
+.expo/
+.env
+dataset_split/

@@ -1,0 +1,79 @@
+{
+    "Melanoma": {
+        "cause": "Malignant transformation and uncontrolled proliferation of melanocytes (pigment-producing cells), primarily driven by acquired DNA mutations often linked to intermittent, intense UV radiation exposure.",
+        "precautions": [
+            "Strict avoidance of intentional sun exposure and all indoor tanning devices.",
+            "Daily, year-round use of broad-spectrum sunscreen (SPF 30+) on exposed areas.",
+            "Perform monthly self-examinations (ABCDE rule) for early detection.",
+            "Schedule annual comprehensive skin examinations with a dermatologist."
+        ]
+    },
+    "Basal Cell Carcinoma": {
+        "cause": "The most common form of skin cancer, arising from uncontrolled growth of basal cells, highly correlated with cumulative, lifelong sun exposure.",
+        "precautions": [
+            "Minimize daily sun exposure, especially between 10 AM and 4 PM.",
+            "Routinely apply broad-spectrum sunscreen (SPF 30+).",
+            "Wear sun-protective clothing, including wide-brimmed hats and UV-blocking sunglasses.",
+            "Undergo regular dermatological screenings for surveillance of new or changing lesions."
+        ]
+    },
+    "Acitinic Keratosis": {
+        "cause": "Premalignant, scaly patches (keratinocyte atypia) resulting from chronic cumulative sun damage, considered an early form of Squamous Cell Carcinoma.",
+        "precautions": [
+            "Employ rigorous sun protection strategies to prevent new lesion formation.",
+            "Adhere strictly to topical treatments (e.g., fluorouracil, imiquimod) as prescribed.",
+            "Undergo cryotherapy or laser ablation for localized lesions.",
+            "Maintain close follow-up with a dermatologist due to the risk of malignant progression."
+        ]
+    },
+    "Squamous Cell Carcinoma": {
+        "cause": "Malignancy arising from the uncontrolled growth of squamous cells (keratinocytes) in the outer layers of the epidermis, strongly associated with chronic UV exposure and immunosuppression.",
+        "precautions": [
+            "Implement a comprehensive sun-safe regimen to reduce further photodamage.",
+            "Promptly seek biopsy and definitive surgical excision or radiation therapy for identified lesions.",
+            "Address predisposing factors, such as immunosuppression or chronic inflammation.",
+            "Ensure lifelong dermatological follow-up due to high recurrence risk."
+        ]
+    },
+    "Seborrheic Keratosis": {
+        "cause": "Benign epidermal tumors characterized by a proliferation of keratinocytes, typically associated with genetic predisposition and advanced age; not related to sun exposure.",
+        "precautions": [
+            "Reassurance and no treatment are required unless symptomatic (itchy, irritated) or cosmetically bothersome.",
+            "Avoid mechanical trauma (scratching) which can lead to inflammation or secondary infection.",
+            "Methods for removal (cryotherapy, curettage) are purely elective and should be discussed with a specialist."
+        ]
+    },
+    "Pigmented Benign Keratosis": {
+        "cause": "A term often used clinically for benign lesions like pigmented Seborrheic Keratosis or lightly pigmented Nevi (moles); represents a non-cancerous overgrowth of epidermal cells or melanocytes.",
+        "precautions": [
+            "Regularly examine the lesion for the 'ugly duckling' sign or any concerning changes (ABCDE).",
+            "Practice general sun avoidance, though the lesion itself is usually not caused by acute exposure.",
+            "Immediate consultation is warranted if there is rapid change in size, bleeding, or color variation to rule out Melanoma."
+        ]
+    },
+    "Nevus": {
+        "cause": "A common melanocytic nevus (mole) is a benign, localized proliferation of melanocytes, often congenital or acquired early in life, influenced by genetics and sun exposure.",
+        "precautions": [
+            "Apply the **ABCDE criteria** (Asymmetry, Border, Color, Diameter, Evolution) during self-checks.",
+            "Protect the nevus from chronic irritation or repeated trauma.",
+            "Seek professional medical review if any ABCDE criterion changes or if the lesion becomes symptomatic.",
+            "Note that an abundance of nevi increases overall Melanoma risk."
+        ]
+    },
+    "Vascular Lesion": {
+        "cause": "A general term for abnormal or excessive formation of blood vessels (hemangioma, venous lake, etc.), resulting from developmental errors or localized trauma.",
+        "precautions": [
+            "Consult a dermatologist or vascular specialist for accurate diagnosis and monitoring.",
+            "Consider selective treatment options like laser therapy or sclerotherapy if the lesion is bleeding, growing, or cosmetically unacceptable.",
+            "Protect the area from external pressure or trauma to minimize bleeding risk."
+        ]
+    },
+    "Dermatofibroma": {
+        "cause": "A common, benign fibrous skin tumor (a form of histiocytoma) believed to be an exaggerated local tissue reaction to minor injury, insect bites, or hair follicle inflammation.",
+        "precautions": [
+            "No treatment is typically required as these are benign and usually asymptomatic.",
+            "Patients should be advised against attempts to self-remove or pick at the lesion.",
+            "Excision is reserved only for cases where the lesion is painful, frequently irritated (e.g., by clothing), or if the clinical diagnosis is uncertain."
+        ]
+    }
+}
