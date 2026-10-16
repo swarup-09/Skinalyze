@@ -13,7 +13,7 @@ from io import BytesIO
 # --- PATHS ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, "models", "skin_disease_model_mobilenetv2.h5")
-TRAIN_DIR = os.path.join(BASE_DIR, "dataset_split", "train")
+CLASS_NAMES = json.load(open(os.path.join(BASE_DIR, "models", "class_names.json")))
 DISEASE_INFO_PATH = os.path.join(BASE_DIR, "scripts", "disease_info.json")
 
 IMAGE_SIZE = (224, 224)
